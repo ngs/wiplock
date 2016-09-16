@@ -13,7 +13,7 @@
     "go:deps": "go get -u github.com/jteeuwen/go-bindata/... && go get -t -d -v",
     "go:test": "go test -v ./... | sed '/PASS/s//$$(printf \"\\033[32mPASS\\033[0m\")/' | sed '/FAIL/s//$$(printf \"\\033[31mFAIL\\033[0m\")/'",
     "lint": "npm run eslint && npm run stylint",
-    "postinstall": "npm run chest:open && npm run godeps",
+    "postinstall": "npm run chest:open && npm run go:deps",
     "chest:open": "/bin/bash -c '[[ -f ./node_modules/.bin/chest ]] && ./node_modules/.bin/chest open' || :",
     "chest:close": "/bin/bash -c '[[ -f ./node_modules/.bin/chest ]] && ./node_modules/.bin/chest close' || :",
     "start": "webpack-dev-server",
