@@ -1,0 +1,68 @@
+{
+	"ImportPath": "github.com/ngs/wiplock",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v74",
+	"Deps": [
+		{
+			"ImportPath": "github.com/eknkc/amber",
+			"Rev": "7875e9689d335cd15294cd6f4f0ef8322ce4c8e7"
+		},
+		{
+			"ImportPath": "github.com/eknkc/amber/parser",
+			"Rev": "7875e9689d335cd15294cd6f4f0ef8322ce4c8e7"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Comment": "v1.1-7-g08b5f42",
+			"Rev": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.1-25-g0a192a1",
+			"Rev": "0a192a193177452756c362c20087ddafcf6829c4"
+		},
+		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Comment": "v1.1-4-gc13558c",
+			"Rev": "c13558c2b1c44da35e0eb043053609a5ba3a1f19"
+		},
+		{
+			"ImportPath": "github.com/gorilla/sessions",
+			"Rev": "7ab2742f1e374be6675e9a4eca54fe529221ae3a"
+		},
+		{
+			"ImportPath": "github.com/lestrrat/go-apache-logformat",
+			"Comment": "v2.0.0-4-g0f5817c",
+			"Rev": "0f5817c5c9e626d408c4d68e3d90fd7697e97d5f"
+		},
+		{
+			"ImportPath": "github.com/pkg/errors",
+			"Comment": "v0.7.1",
+			"Rev": "17b591df37844cde689f4d5813e5cea0927d8dd2"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "6d10a0c3eafbed530eb495a38c41ccdf8ebdcb4e"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2",
+			"Rev": "ef4eca6b097fad7cec79afcc278d213a6de1c960"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2/github",
+			"Rev": "ef4eca6b097fad7cec79afcc278d213a6de1c960"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2/internal",
+			"Rev": "ef4eca6b097fad7cec79afcc278d213a6de1c960"
+		},
+		{
+			"ImportPath": "gopkg.in/go-playground/webhooks.v1",
+			"Rev": "6bfbae2ae33d4c4cc08178f2d5fd77c465e16596"
+		},
+		{
+			"ImportPath": "gopkg.in/go-playground/webhooks.v1/github",
+			"Rev": "6bfbae2ae33d4c4cc08178f2d5fd77c465e16596"
+		}
+	]
+}
