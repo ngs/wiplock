@@ -75,3 +75,4 @@ cache
 /.eslintignore
 /.eslintrc
 /.stylintrc
+/.node-version
