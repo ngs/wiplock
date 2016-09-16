@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/gorilla/sessions"
 	"gopkg.in/go-playground/webhooks.v1"
-	"gopkg.in/go-playground/webhooks.v1/github"
 	"html/template"
 	"log"
 	"net/http"
@@ -16,31 +15,20 @@ type App struct {
 	SessionStore *sessions.CookieStore
 	AssetHash    string
 	Webhook      webhooks.Webhook
-}
-
-func (app *App) GetSession(r *http.Request) *sessions.Session {
-	session, _ := app.SessionStore.Get(r, "__wlsess")
-	return session
+	Secret       string
 }
 
 func New() (*App, error) {
-	h, err := GetAssetHash()
-	if err != nil {
-		return nil, err
+	app := &App{HTMLTemplate: NewTemplate()}
+	if err := app.GetAssetHash(); err != nil {
+		return app, err
 	}
 	secret := os.Getenv("SECRET")
 	if secret == "" {
-		return nil, errors.New("SECRET is not configured. try run\n$ echo \"export SECRET=$(openssl rand -base64 48)\" >> .envrc")
+		return app, errors.New("SECRET is not configured. try run\n$ echo \"export SECRET='$(openssl rand -base64 48)'\" >> .envrc")
 	}
-	store := sessions.NewCookieStore([]byte(secret))
-	wh := github.New(&github.Config{Secret: secret})
-	app := &App{
-		HTMLTemplate: NewTemplate(),
-		SessionStore: store,
-		AssetHash:    h,
-		Webhook:      wh,
-	}
-	wh.RegisterEvents(app.HandlePullRequest, github.PullRequestEvent)
+	app.Secret = secret
+	app.SetupSessionStore()
 	return app, nil
 }
 

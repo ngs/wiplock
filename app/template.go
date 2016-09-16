@@ -12,6 +12,6 @@ html
     script[src="/assets/bundle-"+AssetHash+".js"]
     title #{SiteTitle}
     meta[name="description"][content=SiteDescription]
-  body[class=BodyClass]
+  body[data-access-token=AccessToken]
     #app-root`, amber.Options{PrettyPrint: false})
 }

@@ -5,11 +5,12 @@ import (
 	"encoding/hex"
 )
 
-func GetAssetHash() (string, error) {
+func (app *App) GetAssetHash() error {
 	data, err := Asset("assets/build/bundle.js")
 	if err != nil {
-		return "", err
+		return err
 	}
 	h := md5.Sum(data)
-	return hex.EncodeToString(h[:]), nil
+	app.AssetHash = hex.EncodeToString(h[:])
+	return nil
 }

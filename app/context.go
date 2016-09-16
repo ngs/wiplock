@@ -10,7 +10,6 @@ const SiteTitle = "Wiplock"
 
 type Context struct {
 	AssetHash       string
-	BodyClass       string
 	AccessToken     string
 	SiteDescription string
 	SiteTitle       string
@@ -26,16 +25,8 @@ func (app *App) CreateContext(r *http.Request) *Context {
 		SiteDescription: SiteDescription,
 		SiteTitle:       SiteTitle,
 	}
-	ctx.BodyClass = ctx.GetBodyClass()
 	ctx.AccessToken = ctx.GetAccessToken()
 	return ctx
-}
-
-func (context *Context) GetBodyClass() string {
-	if context.GetAccessToken() == "" {
-		return "guest"
-	}
-	return ""
 }
 
 func (context *Context) GetAccessToken() string {
