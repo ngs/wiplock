@@ -71,3 +71,7 @@ assets/build
 wiplock
 cache
 
+/.babelrc
+/.eslintignore
+/.eslintrc
+/.stylintrc
