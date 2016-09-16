@@ -81,7 +81,10 @@ export default {
     contentBase: buildDir,
     hot: true,
     inline: true,
-    publicPath: '/assets'
+    publicPath: '/assets/',
+    proxy: {
+      '/api/*': 'http://localhost:8000'
+    }
   },
   devtool: devServer ? '#cheap-module-inline-source-map' : null
 };

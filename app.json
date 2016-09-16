@@ -1,0 +1,15 @@
+{
+  "name": "Wiplock",
+  "description": "Wiplock protects mistakenly merging pull requests in progress",
+  "keywords": [
+    "wip",
+    "go",
+    "workflow",
+    "github",
+    "pull requests"
+  ],
+  "image": "heroku/go:1.6",
+  "mount_dir": "src/github.com/ngs/wiplock",
+  "website": "http://github.com/ngs/wiplock",
+  "repository": "http://github.com/ngs/wiplock"
+}

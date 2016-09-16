@@ -17,6 +17,7 @@
     "chest:open": "/bin/bash -c '[[ -f ./node_modules/.bin/chest ]] && ./node_modules/.bin/chest open' || :",
     "chest:close": "/bin/bash -c '[[ -f ./node_modules/.bin/chest ]] && ./node_modules/.bin/chest close' || :",
     "start": "webpack-dev-server",
+    "go:start": "npm run go:build && ./wiplock",
     "stylint": "stylint .",
     "test": "jest"
   },
