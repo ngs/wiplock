@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"github.com/gorilla/sessions"
+	"github.com/lestrrat/go-apache-logformat"
 	"gopkg.in/go-playground/webhooks.v1"
 	"html/template"
 	"log"
@@ -41,7 +42,7 @@ func Run() error {
 	if port == "" {
 		port = "8000"
 	}
-	http.Handle("/", app.SetupRouter())
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	router := app.SetupRouter()
+	log.Fatal(http.ListenAndServe(":"+port, apachelog.CombinedLog.Wrap(router, os.Stderr)))
 	return nil
 }
