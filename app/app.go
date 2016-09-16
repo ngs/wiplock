@@ -6,7 +6,10 @@ import (
 	"errors"
 	"github.com/gorilla/sessions"
 	"github.com/julienschmidt/httprouter"
+	"gopkg.in/go-playground/webhooks.v1"
+	"gopkg.in/go-playground/webhooks.v1/github"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 )
@@ -15,29 +18,7 @@ type App struct {
 	HTMLTemplate *template.Template
 	SessionStore *sessions.CookieStore
 	AssetHash    string
-}
-
-func (app *App) Asset(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var name = ps.ByName("repo")
-	if name == "bundle-"+app.AssetHash+".js" {
-		name = "bundle.js"
-	}
-	data, err := Asset("assets/build/" + name)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-	} else {
-		w.Write(data)
-	}
-}
-
-func (app *App) Index(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	org := ps.ByName("org")
-	repo := ps.ByName("org")
-	if org == "assets" && repo != "" {
-		app.Asset(w, r, ps)
-		return
-	}
-	app.HTMLTemplate.Execute(w, app.CreateContext(r))
+	Webhook      webhooks.Webhook
 }
 
 func GetAssetHash() (string, error) {
@@ -59,15 +40,36 @@ func New() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	secret := os.Getenv("SESSION_SECRET")
+	secret := os.Getenv("SECRET")
 	if secret == "" {
-		return nil, errors.New("SESSION_SECRET is not configured. try run\n$ echo \"export SESSION_SECRET=$(openssl rand -base64 48)\" >> .envrc")
+		return nil, errors.New("SECRET is not configured. try run\n$ echo \"export SECRET=$(openssl rand -base64 48)\" >> .envrc")
 	}
 	store := sessions.NewCookieStore([]byte(secret))
+	wh := github.New(&github.Config{Secret: secret})
 	app := &App{
 		HTMLTemplate: NewTemplate(),
 		SessionStore: store,
 		AssetHash:    h,
+		Webhook:      wh,
 	}
+	wh.RegisterEvents(app.HandlePullRequest, github.PullRequestEvent)
 	return app, nil
+}
+
+func Run() error {
+	app, err := New()
+	if err != nil {
+		return err
+	}
+	router := httprouter.New()
+	router.POST("/hooks", app.HandleWebhook)
+	router.GET("/", app.Index)
+	router.GET("/:org", app.Index)
+	router.GET("/:org/:repo", app.Index)
+	var port = os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+	log.Fatal(http.ListenAndServe(":"+port, router))
+	return nil
 }
