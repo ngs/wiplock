@@ -7,6 +7,7 @@ import nib from 'nib';
 import packagejson from './package.json';
 import path from 'path';
 import webpack from 'webpack';
+import { spawn } from 'child_process';
 
 const version = packagejson.version;
 const devServer = /webpack\-dev\-server$/.test(process.env._);
@@ -23,6 +24,10 @@ const plugins = [
     }
   })
 ];
+
+process.env.NO_ASSET_HASH = 1;
+const serverProcess = spawn('./wiplock');
+process.on('exit', () => serverProcess.kill());
 
 if (devServer) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -83,7 +88,8 @@ export default {
     inline: true,
     publicPath: '/assets/',
     proxy: {
-      '/api/*': 'http://localhost:8000'
+      '/api/*': 'http://localhost:8000',
+      '/': 'http://localhost:8000'
     }
   },
   devtool: devServer ? '#cheap-module-inline-source-map' : null

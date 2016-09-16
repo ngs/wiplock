@@ -9,7 +9,7 @@ func NewTemplate() *template.Template {
 	return amber.MustCompile(`!!! 5
 html
   head
-    script[src="/assets/bundle-"+AssetHash+".js"]
+    script[src=JavaScriptPath]
     title #{SiteTitle}
     meta[name="description"][content=SiteDescription]
   body[data-access-token=AccessToken]

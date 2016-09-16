@@ -9,17 +9,17 @@ const SiteDescription = "A tiny app that protects mistakenly merging pull reques
 const SiteTitle = "Wiplock"
 
 type Context struct {
-	AssetHash       string
 	AccessToken     string
 	SiteDescription string
 	SiteTitle       string
+	JavaScriptPath  string
 	Request         *http.Request
 	Session         *sessions.Session
 }
 
 func (app *App) CreateContext(r *http.Request) *Context {
 	ctx := &Context{
-		AssetHash:       app.AssetHash,
+		JavaScriptPath:  app.GetJavaScriptPath(),
 		Request:         r,
 		Session:         app.GetSession(r),
 		SiteDescription: SiteDescription,

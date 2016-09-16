@@ -67,3 +67,10 @@ func Run() error {
 	log.Fatal(http.ListenAndServe(":"+port, apachelog.CombinedLog.Wrap(router, os.Stderr)))
 	return nil
 }
+
+func (app *App) GetJavaScriptPath() string {
+	if os.Getenv("NO_ASSET_HASH") == "1" {
+		return "/assets/bundle.js"
+	}
+	return "/assets/bundle-" + app.AssetHash + ".js"
+}
