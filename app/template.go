@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"github.com/eknkc/amber"
@@ -10,8 +10,8 @@ func NewTemplate() *template.Template {
 html
   head
     script[src="/assets/bundle-"+AssetHash+".js"]
-    title Wiplock
-    meta[name="description"][content="A tiny app that protects mistakenly merging pull requests in progress"]
-  body
+    title #{SiteTitle}
+    meta[name="description"][content=SiteDescription]
+  body[class=BodyClass]
     #app-root`, amber.Options{PrettyPrint: false})
 }

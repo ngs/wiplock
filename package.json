@@ -5,16 +5,18 @@
   "description": "Wiplock protects mistakenly merging pull requests in progress",
   "main": "assets/src/index.js",
   "scripts": {
+    "webpack": "webpack",
+    "build": "npm run webpack && npm run bindata && npm run go:build",
     "eslint": "eslint .",
-    "stylint": "stylint .",
-    "start": "webpack-dev-server",
+    "go:bindata": "go-bindata -pkg app -o ./app/bindata.go assets/build",
+    "go:build": "go build -v",
+    "go:deps": "go get -u github.com/jteeuwen/go-bindata/... && go get -t -d -v",
+    "go:test": "go test -v ./... | sed '/PASS/s//$$(printf \"\\033[32mPASS\\033[0m\")/' | sed '/FAIL/s//$$(printf \"\\033[31mFAIL\\033[0m\")/'",
     "lint": "npm run eslint && npm run stylint",
-    "test": "jest",
-    "test:server": "go test -v ./... | sed '/PASS/s//$$(printf \"\\033[32mPASS\\033[0m\")/' | sed '/FAIL/s//$$(printf \"\\033[31mFAIL\\033[0m\")/'",
-    "postinstall": "go get -u github.com/jteeuwen/go-bindata/... && go get -t -d -v",
-    "build:assets": "webpack && go-bindata assets/build",
-    "build:server": "go build -v ./...",
-    "build": "npm run build:assets && npm run build:server"
+    "postinstall": "npm run godeps",
+    "start": "webpack-dev-server",
+    "stylint": "stylint .",
+    "test": "jest"
   },
   "repository": {
     "type": "git",

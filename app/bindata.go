@@ -6,7 +6,7 @@
 // assets/build/f4769f9bdb7466be65088239c12046d1.eot
 // DO NOT EDIT!
 
-package main
+package app
 
 import (
 	"bytes"
