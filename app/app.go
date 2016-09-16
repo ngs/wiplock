@@ -41,6 +41,7 @@ func Run() error {
 	if port == "" {
 		port = "8000"
 	}
-	log.Fatal(http.ListenAndServe(":"+port, app.SetupRouter()))
+	http.Handle("/", app.SetupRouter())
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 	return nil
 }
