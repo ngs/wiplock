@@ -1,11 +1,8 @@
 package app
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"errors"
 	"github.com/gorilla/sessions"
-	"github.com/julienschmidt/httprouter"
 	"gopkg.in/go-playground/webhooks.v1"
 	"gopkg.in/go-playground/webhooks.v1/github"
 	"html/template"
@@ -19,15 +16,6 @@ type App struct {
 	SessionStore *sessions.CookieStore
 	AssetHash    string
 	Webhook      webhooks.Webhook
-}
-
-func GetAssetHash() (string, error) {
-	data, err := Asset("assets/build/bundle.js")
-	if err != nil {
-		return "", err
-	}
-	h := md5.Sum(data)
-	return hex.EncodeToString(h[:]), nil
 }
 
 func (app *App) GetSession(r *http.Request) *sessions.Session {
@@ -61,15 +49,10 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	router := httprouter.New()
-	router.POST("/hooks", app.HandleWebhook)
-	router.GET("/", app.Index)
-	router.GET("/:org", app.Index)
-	router.GET("/:org/:repo", app.Index)
 	var port = os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
 	}
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port, app.SetupRouter()))
 	return nil
 }
