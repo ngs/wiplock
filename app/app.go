@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gorilla/sessions"
 	"github.com/lestrrat/go-apache-logformat"
 	"gopkg.in/go-playground/webhooks.v1"
@@ -9,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type App struct {
@@ -17,6 +19,8 @@ type App struct {
 	AssetHash    string
 	Webhook      webhooks.Webhook
 	Secret       string
+	ClientSecret string
+	ClientID     string
 }
 
 func New() (*App, error) {
@@ -25,10 +29,27 @@ func New() (*App, error) {
 		return app, err
 	}
 	secret := os.Getenv("SECRET")
+	clientSecret := os.Getenv("GITHUB_CLIENT_SECRET")
+	clientID := os.Getenv("GITHUB_CLIENT_ID")
+	var errVars = []string{}
 	if secret == "" {
-		return app, errors.New("SECRET is not configured. try run\n$ echo \"export SECRET='$(openssl rand -base64 48)'\" >> .envrc")
+		errVars = append(errVars, "SECRET")
+	}
+	if clientSecret == "" {
+		errVars = append(errVars, "GITHUB_CLIENT_SECRET")
+	}
+	if clientID == "" {
+		errVars = append(errVars, "GITHUB_CLIENT_ID")
+	}
+	if len(errVars) > 0 {
+		return app, fmt.Errorf("%s are not configured.", strings.Join(errVars, ", "))
+	}
+	if secret == "" {
+		return app, errors.New("SECRET is not configured. try run\n$ echo \"export SECRET='$(openssl rand -hex 48)'\" >> .envrc")
 	}
 	app.Secret = secret
+	app.ClientID = clientID
+	app.ClientSecret = clientSecret
 	app.SetupSessionStore()
 	return app, nil
 }

@@ -8,14 +8,16 @@ import (
 
 func (app *App) SetupRouter() *mux.Router {
 	router := mux.NewRouter()
+	router.HandleFunc("/oauth/callback", app.HandleOAuthCallback).Methods("GET")
 	router.HandleFunc("/hooks", app.HandleWebhook).Methods("POST")
-	router.HandleFunc("/", app.HandleIndex).Methods("GET")
+	router.HandleFunc("/authenticate", app.HandleAuthenticate).Methods("GET")
 	router.HandleFunc("/assets/{filename}", app.HandleAsset).Methods("GET")
-	router.HandleFunc("/{org}", app.HandleIndex).Methods("GET")
-	router.HandleFunc("/{org}/{repo}", app.HandleIndex).Methods("GET")
 	router.HandleFunc("/api/{org}/locks", app.HandleListLocks).Methods("GET")
 	router.HandleFunc("/api/{org}/{:repo}/lock", app.HandleLockRepo).Methods("POST")
 	router.HandleFunc("/api/{org}/{:repo}/lock", app.HandleUnlockRepo).Methods("DELETE")
+	router.HandleFunc("/{org}/{repo}", app.HandleIndex).Methods("GET")
+	router.HandleFunc("/{org}", app.HandleIndex).Methods("GET")
+	router.HandleFunc("/", app.HandleIndex).Methods("GET")
 	return router
 }
 
@@ -38,6 +40,26 @@ func (app *App) HandleIndex(w http.ResponseWriter, r *http.Request) {
 
 func (app *App) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 	app.Webhook.ParsePayload(w, r)
+}
+
+func (app *App) HandleAuthenticate(w http.ResponseWriter, r *http.Request) {
+	config := app.GetOAuth2Config()
+	state := RandomString(24) // TODO: persist referer with state as key
+	url := config.AuthCodeURL(state)
+	http.Redirect(w, r, url, http.StatusSeeOther)
+}
+
+func (app *App) HandleOAuthCallback(w http.ResponseWriter, r *http.Request) {
+	code := r.URL.Query().Get("code")
+	state := r.URL.Query().Get("state")
+	token, err := app.GetAccessToken(code, state)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	context := app.CreateContext(r)
+	context.SetAccessToken(token, w)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func (app *App) HandleListLocks(w http.ResponseWriter, r *http.Request) {
