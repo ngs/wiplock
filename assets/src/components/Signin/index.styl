@@ -1,0 +1,28 @@
+@import 'bootstrap/mixins'
+
+body.signin
+  background-color: #f3f3f3
+
+#signin
+
+  min-height: 80%
+  min-height: 80vh
+  display: flex
+  align-items: center
+
+  h1
+    font-size: 4em
+    margin-bottom: .7em
+
+  .btn-default
+    button-variant(#fff, #333, #ccc)
+    .fa-github
+      font-size: 1.6em
+      display: inline-block
+      position: relative
+      top: .1em
+
+  html .btn-default
+    &:hover, &:focus
+      color: #eee
+

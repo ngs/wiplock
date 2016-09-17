@@ -10,6 +10,7 @@ const SiteTitle = "Wiplock"
 
 type Context struct {
 	AccessToken     string
+	BodyClassName   string
 	SiteDescription string
 	SiteTitle       string
 	JavaScriptPath  string
@@ -26,6 +27,9 @@ func (app *App) CreateContext(r *http.Request) *Context {
 		SiteTitle:       SiteTitle,
 	}
 	ctx.AccessToken = ctx.GetAccessToken()
+	if ctx.AccessToken == "" {
+		ctx.BodyClassName = "signin"
+	}
 	return ctx
 }
 

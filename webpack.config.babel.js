@@ -25,7 +25,7 @@ const plugins = [
   })
 ];
 
-process.env.NO_ASSET_HASH = 1;
+process.env.DEV_SERVER = 1;
 const serverProcess = spawn('./wiplock');
 process.on('exit', () => serverProcess.kill());
 

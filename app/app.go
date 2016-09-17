@@ -69,7 +69,7 @@ func Run() error {
 }
 
 func (app *App) GetJavaScriptPath() string {
-	if os.Getenv("NO_ASSET_HASH") == "1" {
+	if os.Getenv("DEV_SERVER") == "1" {
 		return "/assets/bundle.js"
 	}
 	return "/assets/bundle-" + app.AssetHash + ".js"
