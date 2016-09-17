@@ -90,7 +90,7 @@ func assetsBuild1dc35d25e61d819a9c357074014867abTtf() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/1dc35d25e61d819a9c357074014867ab.ttf", size: 152796, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/1dc35d25e61d819a9c357074014867ab.ttf", size: 152796, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -110,7 +110,7 @@ func assetsBuild25a32416abee198dd821b0b17a198a8fEot() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/25a32416abee198dd821b0b17a198a8f.eot", size: 76518, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/25a32416abee198dd821b0b17a198a8f.eot", size: 76518, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -130,7 +130,7 @@ func assetsBuild89889688147bd7575d6327160d64e760Svg() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/89889688147bd7575d6327160d64e760.svg", size: 108738, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/89889688147bd7575d6327160d64e760.svg", size: 108738, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -150,7 +150,7 @@ func assetsBuildBundleJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/bundle.js", size: 948223, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/bundle.js", size: 948223, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -170,7 +170,7 @@ func assetsBuildD7c639084f684d66a1bc66855d193ed8Svg() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/d7c639084f684d66a1bc66855d193ed8.svg", size: 391622, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/d7c639084f684d66a1bc66855d193ed8.svg", size: 391622, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -190,7 +190,7 @@ func assetsBuildE18bbf611f2a2e43afc071aa2f4e1512Ttf() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/e18bbf611f2a2e43afc071aa2f4e1512.ttf", size: 45404, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/e18bbf611f2a2e43afc071aa2f4e1512.ttf", size: 45404, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -210,7 +210,7 @@ func assetsBuildF4769f9bdb7466be65088239c12046d1Eot() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/build/f4769f9bdb7466be65088239c12046d1.eot", size: 20127, mode: os.FileMode(420), modTime: time.Unix(1474095464, 0)}
+	info := bindataFileInfo{name: "assets/build/f4769f9bdb7466be65088239c12046d1.eot", size: 20127, mode: os.FileMode(420), modTime: time.Unix(1474129704, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
