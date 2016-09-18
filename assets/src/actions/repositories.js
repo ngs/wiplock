@@ -29,7 +29,6 @@ const fetchRepositories = (org) => dispatch => {
   return api
     .then(({ data }) => dispatch(fetchRepositoriesSuccess(data, org)))
     .catch(error => {
-      console.error(error);
       return dispatch(fetchRepositoriesFailure(error));
     })
     ;
