@@ -1,5 +1,5 @@
-import requestRepositories from './requestRepositories';
+import { fetchRepositoriesIfNeeded } from './repositories';
 
 export default {
-  requestRepositories
+  fetchRepositoriesIfNeeded
 };

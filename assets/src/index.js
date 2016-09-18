@@ -4,6 +4,7 @@ import { Route, Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import reducer from './reducers';
 import createLogger from 'redux-logger';
+import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 
 import App from './components/App';
@@ -16,7 +17,7 @@ import { setAccessToken } from './helpers/github';
 const element = document.getElementById('app-root');
 const accessToken = element.getAttribute('data-access-token');
 
-const middleware = [];
+const middleware = [thunk()];
 if (process.env.NODE_ENV !== 'production') { // eslint-disable-line no-process-env
   middleware.push(createLogger());
 }

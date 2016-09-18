@@ -13,46 +13,37 @@ describe('repositoriesByOrg reducer', () => {
   it('should return initial state', () => {
     expect(subject()).toEqual({});
   });
-  it('should handle FETCH_REPOSITORIES', () => {
+  it('should handle FETCH_REPOSITORIES_REQUEST', () => {
     let _state = {};
     state = () => _state;
     action = () => ({
-      type: ActionTypes.FETCH_REPOSITORIES,
-      org: 'ngs'
+      type: ActionTypes.FETCH_REPOSITORIES_REQUEST,
+      org: undefined
     });
     _state = subject();
     expect(subject()).toEqual({
-      ngs: {
+      '@me': {
+        didInvalidate: false,
         isFetching: true,
         items: [],
-        more: false,
-        completed: false,
-        nextURL: null,
-        lastURL: null,
         error: null
       }
     });
     action = () => ({
-      type: ActionTypes.FETCH_REPOSITORIES,
+      type: ActionTypes.FETCH_REPOSITORIES_REQUEST,
       org: 'littleapps'
     });
     expect(subject()).toEqual({
-      ngs: {
+      '@me': {
+        didInvalidate: false,
         isFetching: true,
         items: [],
-        more: false,
-        completed: false,
-        nextURL: null,
-        lastURL: null,
         error: null
       },
       littleapps: {
+        didInvalidate: false,
         isFetching: true,
         items: [],
-        more: false,
-        completed: false,
-        nextURL: null,
-        lastURL: null,
         error: null
       }
     });
@@ -66,78 +57,36 @@ describe('repositoriesByOrg reducer', () => {
     };
     state = () => _state;
     action = () => ({
-      org: 'ngs',
-      more: false,
+      didInvalidate: false,
+      org: undefined,
       type: ActionTypes.FETCH_REPOSITORIES_SUCCESS,
-      items: [{ id: 1 }, { id: 2 }, { id: 3 }],
-      nextURL: 'https://api.github.com/ngs/repos?page=1&per_page=20',
-      lastURL: 'https://api.github.com/ngs/repos?page=2&per_page=20'
+      items: [{ id: 1 }, { id: 2 }, { id: 3 }]
     });
     subject();
     expect(subject()).toEqual({
-      ngs: {
+      '@me': {
+        didInvalidate: false,
         isFetching: false,
         items: [{ id: 1 }, { id: 2 }, { id: 3 }],
-        more: false,
-        completed: false,
-        nextURL: 'https://api.github.com/ngs/repos?page=1&per_page=20',
-        lastURL: 'https://api.github.com/ngs/repos?page=2&per_page=20',
         error: null
       }
     });
     action = () => ({
       org: 'littleapps',
-      more: false,
       type: ActionTypes.FETCH_REPOSITORIES_SUCCESS,
-      items: [{ id: 1 }, { id: 2 }, { id: 3 }],
-      nextURL: 'https://api.github.com/littleapps/repos?page=1&per_page=20',
-      lastURL: 'https://api.github.com/littleapps/repos?page=2&per_page=20'
+      items: [{ id: 1 }, { id: 2 }, { id: 3 }]
     });
     expect(subject()).toEqual({
-      ngs: {
+      '@me': {
+        didInvalidate: false,
         isFetching: false,
         items: [{ id: 1 }, { id: 2 }, { id: 3 }],
-        more: false,
-        completed: false,
-        nextURL: 'https://api.github.com/ngs/repos?page=1&per_page=20',
-        lastURL: 'https://api.github.com/ngs/repos?page=2&per_page=20',
         error: null
       },
       littleapps: {
+        didInvalidate: false,
         isFetching: false,
         items: [{ id: 1 }, { id: 2 }, { id: 3 }],
-        more: false,
-        completed: false,
-        nextURL: 'https://api.github.com/littleapps/repos?page=1&per_page=20',
-        lastURL: 'https://api.github.com/littleapps/repos?page=2&per_page=20',
-        error: null
-      }
-    });
-    action = () => ({
-      org: 'ngs',
-      more: true,
-      type: ActionTypes.FETCH_REPOSITORIES_SUCCESS,
-      items: [{ id: 4 }, { id: 5 }, { id: 6 }],
-      nextURL: null,
-      lastURL: 'https://api.github.com/ngs/repos?page=2&per_page=20'
-    });
-    expect(subject()).toEqual({
-      ngs: {
-        isFetching: false,
-        items: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }],
-        more: false,
-        completed: true,
-        nextURL: null,
-        lastURL: 'https://api.github.com/ngs/repos?page=2&per_page=20',
-        error: null
-      },
-      littleapps: {
-        isFetching: false,
-        items: [{ id: 1 }, { id: 2 }, { id: 3 }],
-        more: false,
-        completed: false,
-        nextURL: 'https://api.github.com/littleapps/repos?page=1&per_page=20',
-        lastURL: 'https://api.github.com/littleapps/repos?page=2&per_page=20',
         error: null
       }
     });
