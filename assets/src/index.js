@@ -17,7 +17,7 @@ import { setAccessToken } from './helpers/github';
 const element = document.getElementById('app-root');
 const accessToken = element.getAttribute('data-access-token');
 
-const middleware = [thunk()];
+const middleware = [thunk];
 if (process.env.NODE_ENV !== 'production') { // eslint-disable-line no-process-env
   middleware.push(createLogger());
 }
