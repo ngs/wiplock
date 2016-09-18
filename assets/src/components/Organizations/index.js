@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { ListGroup, Breadcrumb } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { fetchOrganizationsIfNeeded } from '../../actions/organizations';
+import { fetchUserIfNeeded } from '../../actions/user';
 import ListItem from './components/ListItem';
 import './index.styl';
 
@@ -9,10 +10,12 @@ class Organizations extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    dispatch(fetchUserIfNeeded());
     dispatch(fetchOrganizationsIfNeeded());
   }
 
   render() {
+    const { orgs, user } = this.props;
     return (
       <div id='organizations'>
         <Breadcrumb>
@@ -21,7 +24,8 @@ class Organizations extends Component {
           </Breadcrumb.Item>
         </Breadcrumb>
         <ListGroup>
-          {this.props.items.map(item => <ListItem item={item} key={`org-${item.login}`} />)}
+          {user ? <ListItem item={user} key={`user-${user.login}`} /> : null}
+          {orgs.map(item => <ListItem item={item} key={`org-${item.login}`} />)}
         </ListGroup>
       </div>
     );
@@ -31,21 +35,33 @@ class Organizations extends Component {
 Organizations.displayName = 'Organizations';
 
 Organizations.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  orgs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.shape({
+    login: PropTypes.string.isRequired,
+    avatar_url: PropTypes.string.isRequired
+  }),
   isFetching: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => {
-  const { organizations: currentItems } = state;
+const mapStateToProps = state => { // eslint-disable-line complexity
+  const { organizations: currentItems, user: currentUser } = state;
   const {
-    isFetching,
-    items
+    isFetching: isFetchingOrgs,
+    items: orgs
   } = currentItems || {
     isFetching: true,
     items: []
   };
-  return { items, isFetching };
+  const {
+    isFetching: isFetchingUser,
+    data: user
+  } = currentUser || {
+    isFetching: true,
+    data: null
+  };
+  const isFetching = isFetchingOrgs || isFetchingUser;
+  return { orgs, isFetching, user };
 };
 
 export default connect(mapStateToProps)(Organizations);
