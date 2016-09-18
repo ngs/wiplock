@@ -99,6 +99,7 @@
     "moduleNameMapper": {
       "^.+\\.(css|less|styl|sass|svg|png|mp3)$": null
     },
+    "testRegex": "/__tests__/.+-test\\.js$",
     "verbose": true
   }
 }
