@@ -11,6 +11,7 @@ import NotFound from './components/NotFound';
 import Organizations from './components/Organizations';
 import Repositories from './components/Repositories';
 import Signin from './components/Signin';
+import { setAccessToken } from './helpers/github';
 
 const element = document.getElementById('app-root');
 const accessToken = element.getAttribute('data-access-token');
@@ -19,13 +20,14 @@ const middleware = [];
 if (process.env.NODE_ENV !== 'production') { // eslint-disable-line no-process-env
   middleware.push(createLogger());
 }
-const store = null; // createStore(reducer, applyMiddleware(...middleware));
+const store = createStore(reducer, applyMiddleware(...middleware));
 
 if (!accessToken) {
   render(<Signin />, element);
 } else {
+  setAccessToken(accessToken);
   render(
-    // <Provider store={store}>
+    <Provider store={store}>
       <Router history={browserHistory}>
         <Route path='' component={App}>
           <Route path='/' component={Organizations} />
@@ -33,6 +35,6 @@ if (!accessToken) {
         </Route>
         <Route path='*' component={NotFound} />
       </Router>
-    // </Provider>
+    </Provider>
     , element);
 }

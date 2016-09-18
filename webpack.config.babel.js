@@ -26,57 +26,59 @@ const plugins = [
   })
 ];
 
-let serverProcess = null;
-
-function startServer() {
-  // process.env.DEV_SERVER = 1;
-  const buildProcess = spawn('npm', ['run', 'go:build']);
-  buildProcess.on('close', (code) => {
-    if (code === 0) {
-      console.info('starting server');
-      serverProcess = spawn('./wiplock', [], {
-        env: Object.assign({ DEV_SERVER: 1 }, process.env)
-      });
-      serverProcess.stdout.on('data', (data) => {
-        console.log(`server: ${data}`);
-      });
-      serverProcess.stdout.on('error', (data) => {
-        console.error(`server:error: ${data}`);
-      });
-    } else {
-      console.error(`go:build exited with status ${code}`)
-    }
-  })
-  buildProcess.stdout.on('data', (data) => {
-    console.log(`go:build: ${data}`);
-  });
-  buildProcess.stdout.on('error', (data) => {
-    console.error(`go:build:error: ${data}`);
-  });
-}
-
-function stopServer() {
-  serverProcess.kill();
-  serverProcess = null;
-}
-
-function restartServer() {
-  stopServer();
-  startServer();
-}
-
-fs.watch('./app', (event, filename) => {
-  if (/.+\.go$/.test(filename)) {
-    console.info(event, filename);
-    restartServer();
-  }
-});
-process.on('exit', stopServer);
-startServer();
-
 if (devServer) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
   entries.push('webpack/hot/dev-server');
+
+  let serverProcess = null;
+
+  function startServer() {
+    // process.env.DEV_SERVER = 1;
+    const buildProcess = spawn('npm', ['run', 'go:build']);
+    console.info(`[go:build#${buildProcess.pid}] Starting`);
+    buildProcess.on('close', (code) => {
+      if (code === 0) {
+        serverProcess = spawn('./wiplock', [], {
+          env: Object.assign({ DEV_SERVER: 1 }, process.env)
+        });
+        console.info(`[server#${serverProcess.pid}] Starting`);
+        serverProcess.stdout.on('data', (data) => {
+          console.log(`[server:error#${serverProcess.pid}] ${data}`);
+        });
+        serverProcess.stdout.on('error', (data) => {
+          console.error(`[server#${serverProcess.pid}:error] ${data}`);
+        });
+      } else {
+        console.error(`[go:build#${buildProcess.pid}] exited with status ${code}`)
+      }
+    })
+    buildProcess.stdout.on('data', (data) => {
+      console.log(`[go:build#${buildProcess.pid}] ${data}`);
+    });
+    buildProcess.stdout.on('error', (data) => {
+      console.error(`[go:build#${buildProcess.pid}:error] ${data}`);
+    });
+  }
+
+  function stopServer() {
+    serverProcess.kill();
+    serverProcess = null;
+  }
+
+  function restartServer() {
+    stopServer();
+    startServer();
+  }
+
+  fs.watch('./app', (event, filename) => {
+    if (/.+\.go$/.test(filename)) {
+      console.info(event, filename);
+      restartServer();
+    }
+  });
+  process.on('exit', stopServer);
+  startServer();
+
 } else {
   plugins.push(
     new webpack.optimize.UglifyJsPlugin({

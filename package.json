@@ -20,7 +20,8 @@
     "start": "webpack-dev-server",
     "go:start": "npm run go:build && ./wiplock",
     "stylint": "stylint .",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -60,6 +61,8 @@
     "eslint-plugin-react": "^6.2.2",
     "event-emitter": "^0.3.4",
     "file-loader": "^0.9.0",
+    "github-api": "^2.3.0",
+    "isomorphic-fetch": "^2.2.1",
     "jest-cli": "^15.1.1",
     "keymirror": "^0.1.1",
     "nib": "^1.1.2",
@@ -83,12 +86,11 @@
     "stylus-loader": "^2.3.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.15.2",
-    "whatwg-fetch": "^1.0.0"
+    "webpack-dev-server": "^1.15.2"
   },
   "jest": {
     "testPathDirs": [
-      "<rootDir>/asserts/src"
+      "<rootDir>/assets/src"
     ],
     "cacheDirectory": "<rootDir>/cache/haste",
     "moduleNameMapper": {

@@ -1,2 +1,8 @@
 import { combineReducers } from 'redux';
-export default combineReducers({});
+import repositories from './repositories';
+import repositoriesByOrg from './repositoriesByOrg';
+
+export default combineReducers({
+  repositories,
+  repositoriesByOrg
+});
