@@ -77,7 +77,7 @@ if (devServer) {
     }
   });
   process.on('exit', stopServer);
-  startServer();
+  setTimeout(startServer, 1);
 
 } else {
   plugins.push(
