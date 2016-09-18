@@ -13,7 +13,7 @@ func (app *App) GetOAuth2Config() *oauth2.Config {
 		ClientID:     app.ClientID,
 		ClientSecret: app.ClientSecret,
 		Endpoint:     githubEndpoint.Endpoint,
-		Scopes:       []string{"repo:status", "admin:repo_hook"},
+		Scopes:       []string{"repo:status", "admin:repo_hook", "read:org"},
 	}
 }
 
