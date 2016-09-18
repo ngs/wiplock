@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { fetchOrganizationsIfNeeded } from '../../actions/organizations';
 import { fetchUserIfNeeded } from '../../actions/user';
 import ListItem from './components/ListItem';
+import Spinner from '../Spinner';
 import './index.styl';
 
 class Organizations extends Component {
@@ -15,7 +16,8 @@ class Organizations extends Component {
   }
 
   render() {
-    const { orgs, user } = this.props;
+    const { orgs, user, isFetching } = this.props;
+
     return (
       <div id='organizations'>
         <Breadcrumb>
@@ -23,10 +25,12 @@ class Organizations extends Component {
             Select Organization
           </Breadcrumb.Item>
         </Breadcrumb>
-        <ListGroup>
-          {user ? <ListItem item={user} key={`user-${user.login}`} /> : null}
-          {orgs.map(item => <ListItem item={item} key={`org-${item.login}`} />)}
-        </ListGroup>
+        {isFetching ?
+          <Spinner /> :
+          <ListGroup>
+            {user ? <ListItem item={user} key={`user-${user.login}`} /> : null}
+            {orgs.map(item => <ListItem item={item} key={`org-${item.login}`} />)}
+          </ListGroup>}
       </div>
     );
   }
