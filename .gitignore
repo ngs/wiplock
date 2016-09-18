@@ -75,5 +75,4 @@ cache
 /.eslintignore
 /.eslintrc
 /.stylintrc
-/.node-version
 /Godeps/Readme
