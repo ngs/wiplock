@@ -1,0 +1,19 @@
+@import 'bootstrap/variables'
+
+$size = 32px
+
+.repository-list-item
+  .media-left img
+    width: $size
+    height: $size
+  .media-body
+    .title
+      height: $size
+      display: flex
+      align-items: center
+    .owner
+      color: lighten($text-color, 60)
+    .name
+      font-size: 1.2em
+    .match
+      background: #ffff99

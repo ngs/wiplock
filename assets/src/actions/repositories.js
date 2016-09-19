@@ -15,10 +15,10 @@ function fetchRepositoriesSuccess(items, org) {
   };
 }
 
-function fetchRepositoriesFailure(error) {
+function fetchRepositoriesFailure(error, org) {
   return {
     type: ActionTypes.FETCH_REPOSITORIES_FAILURE,
-    error
+    error, org
   };
 }
 
@@ -29,7 +29,7 @@ const fetchRepositories = (org) => dispatch => {
   return api
     .then(({ data }) => dispatch(fetchRepositoriesSuccess(data, org)))
     .catch(error => {
-      return dispatch(fetchRepositoriesFailure(error));
+      return dispatch(fetchRepositoriesFailure(error, org));
     })
     ;
 };

@@ -33,7 +33,7 @@ const fetchUser = () => dispatch => {
 
 const shouldfetchUser = (state) => { // eslint-disable-line complexity
   const user = state.user;
-  if (!user || !user.login) {
+  if (!user || !user.data || !user.data.login) {
     return true;
   }
   if (user.isFetching) {

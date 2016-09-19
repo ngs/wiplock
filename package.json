@@ -56,6 +56,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.25.0",
     "css-mqpacker": "^5.0.1",
+    "escape-string-regexp": "^1.0.5",
     "eslint": "^3.5.0",
     "eslint-loader": "^1.5.0",
     "eslint-plugin-react": "^6.2.2",

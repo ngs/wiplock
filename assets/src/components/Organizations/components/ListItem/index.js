@@ -28,7 +28,6 @@ ListItem.displayName = 'Organizations.ListItem';
 ListItem.propTypes = {
   item: PropTypes.shape({
     login: PropTypes.string.isRequired,
-    avatar_url: PropTypes.string.isRequired,
+    avatar_url: PropTypes.string.isRequired
   }).isRequired
 };
-

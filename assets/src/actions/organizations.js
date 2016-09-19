@@ -47,3 +47,8 @@ export const fetchOrganizationsIfNeeded = () => (dispatch, getState) => {
     return dispatch(fetchOrganizations());
   }
 };
+
+export const selectOrganization = org => ({
+  type: ActionTypes.SELECT_ORGANIZATION,
+  org
+});

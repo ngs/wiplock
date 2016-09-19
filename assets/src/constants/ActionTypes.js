@@ -1,6 +1,7 @@
 import keyMirror from 'keymirror';
 
 const ActionTypes = keyMirror({
+  SELECT_ORGANIZATION: null,
   FETCH_REPOSITORIES_REQUEST: null,
   FETCH_REPOSITORIES_SUCCESS: null,
   FETCH_REPOSITORIES_FAILURE: null,
