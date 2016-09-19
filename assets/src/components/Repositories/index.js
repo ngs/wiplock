@@ -62,7 +62,7 @@ class Reporitories extends Component {
     if (repos.length > 0) {
       return (
         <ListGroup>{repos.map(item =>
-          <ListItem item={item} key={`repo-${item.id}`} filterText={filterText} />)}
+          <ListItem repoId={item.id} key={`repo-${item.id}`} filterText={filterText} />)}
         </ListGroup>
       );
     }
@@ -113,7 +113,7 @@ Reporitories.propTypes = {
   dispatch: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => { // eslint-disable-line complexity
+const mapStateToProps = (state) => { // eslint-disable-line complexity
   const {
     repositories: currentItems
   } = state;

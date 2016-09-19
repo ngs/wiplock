@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import reducer from './reducers';
+import reducers from './reducers';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
@@ -18,7 +18,7 @@ const middleware = [thunk];
 if (process.env.NODE_ENV !== 'production') { // eslint-disable-line no-process-env
   middleware.push(createLogger());
 }
-const store = createStore(reducer, applyMiddleware(...middleware));
+const store = createStore(reducers, applyMiddleware(...middleware));
 
 if (!accessToken) {
   render(<Signin />, element);

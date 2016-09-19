@@ -63,6 +63,7 @@
     "event-emitter": "^0.3.4",
     "file-loader": "^0.9.0",
     "github-api": "git+https://github.com/ngs/github.git#array-check-dist",
+    "isomorphic-fetch": "^2.2.1",
     "jest-cli": "^15.1.1",
     "keymirror": "^0.1.1",
     "nib": "^1.1.2",
