@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { ListGroupItem, Image, Media } from 'react-bootstrap';
 import Switch from 'react-bootstrap-switch';
-import Icon from 'react-fa';
 import './index.styl';
 import '../../../../../../node_modules/react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.css';
 

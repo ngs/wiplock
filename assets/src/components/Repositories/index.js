@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import { ListGroup, Breadcrumb, Panel, InputGroup, FormControl, FormGroup } from 'react-bootstrap';
+import { ListGroup, Breadcrumb, Panel, InputGroup, FormControl, FormGroup,
+  DropdownButton, MenuItem, Image } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { connect } from 'react-redux';
 import Icon from 'react-fa';
@@ -15,7 +16,7 @@ class Reporitories extends Component {
 
   constructor(...args) {
     super(...args);
-    this.state = { filterText: '' };
+    this.state = { filterText: '', selectedOrg: null };
   }
 
   selectOrganization(props) {
@@ -49,20 +50,43 @@ class Reporitories extends Component {
     if (isFetching) {
       return <Spinner />;
     }
+    const { selectedOrg } = this.state;
+    const orgNames = repos.map(repo => repo.owner.login);
+    const orgs = repos
+      .map(repo => repo.owner)
+      .filter((val, index) => orgNames.indexOf(val.login) === index)
+      ;
     const filterText = this.state.filterText ?
       new RegExp(`(${escapeStringRegexp(this.state.filterText)})`, 'ig') : null;
     if (repos.length > 0) {
-      const filteredRepos = repos.filter(({ name, owner: { login } }) =>
-        !filterText || filterText.test(name) || filterText.test(login));
+      const filteredRepos = repos.filter(({ name, owner: { login } }) => // eslint-disable-line complexity
+        (!filterText || filterText.test(name) || filterText.test(login)) &&
+        (!selectedOrg || selectedOrg.login === login));
       return (
         <div>
-          <FormGroup>
+          <FormGroup bsSize='large'>
             <InputGroup>
               <InputGroup.Addon>
                 <Icon name='search' />
               </InputGroup.Addon>
               <FormControl type='text' placeholder='Filter Repositories'
                 onChange={e => this.setState({ filterText: e.target.value })} />
+              <DropdownButton
+                bsSize='large'
+                pullRight
+                componentClass={InputGroup.Button}
+                id='input-dropdown-addon'
+                title={selectedOrg ?
+                  <Image rounded src={selectedOrg.avatar_url} width={20} height={20} /> :
+                  <Icon name='user' />}>
+                <MenuItem key='__all' onClick={() => this.setState({ selectedOrg: null })}>All</MenuItem>
+                {orgs.map(org => (
+                  <MenuItem key={org.login} onClick={() => this.setState({ selectedOrg: org })}>
+                    <Image rounded src={org.avatar_url} width={16} height={16} />
+                    {' '}
+                    {org.login}
+                  </MenuItem>))}
+              </DropdownButton>
             </InputGroup>
           </FormGroup>
           {filteredRepos.length > 0 ? (
