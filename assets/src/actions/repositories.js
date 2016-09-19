@@ -1,5 +1,6 @@
-import github from '../helpers/github';
 import ActionTypes from '../constants/ActionTypes';
+import apiBase from '../constants/apiBase';
+import fetch from 'isomorphic-fetch';
 
 function fetchRepositoriesRequest() {
   return {
@@ -23,9 +24,9 @@ function fetchRepositoriesFailure(error) {
 
 const fetchRepositories = () => dispatch => {
   dispatch(fetchRepositoriesRequest());
-  const gh = github();
-  return gh.getUser().listRepos()
-    .then(({ data }) => dispatch(fetchRepositoriesSuccess(data)))
+  return fetch(`${apiBase}/repos`, { credentials: 'include' })
+    .then(res => res.json())
+    .then(json => dispatch(fetchRepositoriesSuccess(json)))
     .catch(error => {
       return dispatch(fetchRepositoriesFailure(error));
     })

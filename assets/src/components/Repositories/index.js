@@ -119,12 +119,11 @@ const mapStateToProps = (state) => { // eslint-disable-line complexity
   } = state;
   const {
     isFetching,
-    items: allRepos
+    items: repos
   } = currentItems || {
     isFetching: true,
     items: []
   };
-  const repos = allRepos.filter(repo => repo.permissions.admin);
   return { repos, isFetching };
 };
 

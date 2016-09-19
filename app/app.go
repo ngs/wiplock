@@ -10,11 +10,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
 type App struct {
 	HTMLTemplate *template.Template
+	Port         int
 	SessionStore *sessions.CookieStore
 	AssetHash    string
 	Webhook      webhooks.Webhook
@@ -51,21 +53,23 @@ func New() (*App, error) {
 	app.ClientID = clientID
 	app.ClientSecret = clientSecret
 	app.SetupSessionStore()
+	app.SetupWebhooks()
 	return app, nil
 }
 
-func Run() error {
+func Run() (*App, error) {
 	app, err := New()
 	if err != nil {
-		return err
+		return app, err
 	}
-	var port = os.Getenv("PORT")
-	if port == "" {
-		port = "8000"
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if !(port > 0) {
+		port = 8000
 	}
+	app.Port = port
 	router := app.SetupRouter()
-	log.Fatal(http.ListenAndServe(":"+port, apachelog.CombinedLog.Wrap(router, os.Stderr)))
-	return nil
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), apachelog.CombinedLog.Wrap(router, os.Stderr)))
+	return app, nil
 }
 
 func (app *App) GetJavaScriptPath() string {

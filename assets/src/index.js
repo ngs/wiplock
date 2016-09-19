@@ -9,7 +9,6 @@ import { createStore, applyMiddleware } from 'redux';
 import App from './components/App';
 import Repositories from './components/Repositories';
 import Signin from './components/Signin';
-import { setAccessToken } from './helpers/github';
 
 const element = document.getElementById('app-root');
 const accessToken = element.getAttribute('data-access-token');
@@ -23,7 +22,6 @@ const store = createStore(reducers, applyMiddleware(...middleware));
 if (!accessToken) {
   render(<Signin />, element);
 } else {
-  setAccessToken(accessToken);
   render(
     <Provider store={store}>
       <App>

@@ -1,11 +1,11 @@
 package app
 
 import (
-	// "github.com/google/go-github/github"
 	"fmt"
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	githubEndpoint "golang.org/x/oauth2/github"
+	"net/http"
 )
 
 func (app *App) GetOAuth2Config() *oauth2.Config {
@@ -26,4 +26,15 @@ func (app *App) GetAccessToken(code string, state string) (string, error) {
 		return "", err
 	}
 	return t.AccessToken, nil
+}
+
+func (context *Context) GetOAuth2Client() *http.Client {
+	token := context.GetAccessToken()
+	if token == "" {
+		return nil
+	}
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: token},
+	)
+	return oauth2.NewClient(oauth2.NoContext, ts)
 }

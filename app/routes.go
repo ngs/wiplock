@@ -8,16 +8,26 @@ import (
 
 func (app *App) SetupRouter() *mux.Router {
 	router := mux.NewRouter()
+	router.HandleFunc("/api/repos", app.HandleListRepos).Methods("GET")
 	router.HandleFunc("/oauth/callback", app.HandleOAuthCallback).Methods("GET")
 	router.HandleFunc("/hooks", app.HandleWebhook).Methods("POST")
 	router.HandleFunc("/login", app.HandleAuthenticate).Methods("GET")
 	router.HandleFunc("/logout", app.HandleUnauthenticate).Methods("GET")
 	router.HandleFunc("/assets/{filename}", app.HandleAsset).Methods("GET")
-	router.HandleFunc("/api/{org}/locks", app.HandleListLocks).Methods("GET")
-	router.HandleFunc("/api/{org}/{:repo}/lock", app.HandleLockRepo).Methods("POST")
-	router.HandleFunc("/api/{org}/{:repo}/lock", app.HandleUnlockRepo).Methods("DELETE")
+	router.HandleFunc("/api/{org}/{repo}/lock", app.HandleLockRepo).Methods("PUT")
+	router.HandleFunc("/api/{org}/{repo}/lock", app.HandleUnlockRepo).Methods("DELETE")
+	router.HandleFunc("/favicon.ico", app.HandleFavicon).Methods("GET")
 	router.HandleFunc("/", app.HandleIndex).Methods("GET")
 	return router
+}
+
+func (app *App) HandleFavicon(w http.ResponseWriter, r *http.Request) {
+	data, err := Asset("assets/build/favicon.ico")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	} else {
+		w.Write(data)
+	}
 }
 
 func (app *App) HandleAsset(w http.ResponseWriter, r *http.Request) {
@@ -67,8 +77,15 @@ func (app *App) HandleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func (app *App) HandleListLocks(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "HandleListLocks: not yet implemented\n")
+func (app *App) HandleListRepos(w http.ResponseWriter, r *http.Request) {
+	context := app.CreateContext(r)
+	data, err := context.GetReposJson()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Write(data)
 }
 
 func (app *App) HandleLockRepo(w http.ResponseWriter, r *http.Request) {

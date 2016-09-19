@@ -61,7 +61,9 @@ if (devServer) {
   }
 
   function stopServer() {
-    serverProcess.kill();
+    if (serverProcess) {
+      serverProcess.kill();
+    }
     serverProcess = null;
   }
 

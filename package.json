@@ -6,7 +6,8 @@
   "main": "assets/src/index.js",
   "scripts": {
     "webpack": "webpack",
-    "build": "NODE_ENV=production npm run webpack && npm run go:bindata && npm run go:build",
+    "cp:favicon": "mkdir -p assets/build && cat assets/src/favicon.ico > assets/build/favicon.ico",
+    "build": "NODE_ENV=production npm run webpack && npm run cp:favicon && npm run go:bindata && npm run go:build",
     "eslint": "eslint .",
     "go:bindata": "go-bindata -pkg app -o ./app/bindata.go assets/build",
     "go:build": "go build -v",
@@ -62,7 +63,6 @@
     "eslint-plugin-react": "^6.2.2",
     "event-emitter": "^0.3.4",
     "file-loader": "^0.9.0",
-    "github-api": "git+https://github.com/ngs/github.git#array-check-dist",
     "isomorphic-fetch": "^2.2.1",
     "jest-cli": "^15.1.1",
     "keymirror": "^0.1.1",
