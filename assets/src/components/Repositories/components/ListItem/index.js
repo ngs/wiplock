@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { ListGroupItem, Image, Media } from 'react-bootstrap';
 import Switch from 'react-bootstrap-switch';
+import Icon from 'react-fa';
 import './index.styl';
 import '../../../../../../node_modules/react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.css';
 
@@ -16,6 +17,7 @@ export default class ListItem extends Component {
     const { locked } = this.state;
     let { login } = item.owner;
     let { name } = item;
+    const { html_url, private: isPrivate } = item;
     if (filterText) {
       login = login.replace(filterText, '<span class="match">$1</span>');
       name = name.replace(filterText, '<span class="match">$1</span>');
@@ -31,10 +33,11 @@ export default class ListItem extends Component {
               <Switch onText={'\uf023'} offText={'\uf09c'} value={locked} bsSize='normal'
                 onChange={(_, locked) => this.setState({ locked })} className='fa' />
             </div>
-            <span className='title'>
+            <a className='title' href={html_url} target='_blank'>
               <span className='owner' dangerouslySetInnerHTML={{ __html: login + ' / ' }}></span>
               <span className='name' dangerouslySetInnerHTML={{ __html: name }}></span>
-            </span>
+              {isPrivate ? <Icon name='lock' /> : null}
+            </a>
           </Media.Body>
         </Media>
       </ListGroupItem>
@@ -54,6 +57,7 @@ ListItem.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
+    private: PropTypes.bool.isRequired,
     owner: PropTypes.shape({
       login: PropTypes.string.isRequired,
       avatar_url: PropTypes.string.isRequired

@@ -11,11 +11,18 @@ $size = 32px
       height: $size
       display: flex
       align-items: center
+      &, &:hover, &:focus
+        text-decoration: none
+        color: $text-color
     .owner
       color: lighten($text-color, 60)
     .name
       font-size: 1.2em
     .match
       background: #ffff99
+    .fa-lock
+      margin-left: .5em
+      opacity: .3
   .bootstrap-switch.bootstrap-switch-normal .bootstrap-switch-handle-on
     font-family: 'FontAwesome'
+

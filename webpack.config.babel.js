@@ -129,7 +129,7 @@ export default {
     use: [bootstrap(), nib()]
   },
   devServer: {
-    historyApiFallback: true,
+    historyApiFallback: false,
     contentBase: buildDir,
     hot: true,
     inline: true,

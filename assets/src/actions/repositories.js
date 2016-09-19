@@ -1,52 +1,50 @@
 import github from '../helpers/github';
 import ActionTypes from '../constants/ActionTypes';
 
-function fetchRepositoriesRequest(org) {
+function fetchRepositoriesRequest() {
   return {
-    type: ActionTypes.FETCH_REPOSITORIES_REQUEST,
-    org
+    type: ActionTypes.FETCH_REPOSITORIES_REQUEST
   };
 }
 
-function fetchRepositoriesSuccess(items, org) {
+function fetchRepositoriesSuccess(items) {
   return {
     type: ActionTypes.FETCH_REPOSITORIES_SUCCESS,
-    items, org
+    items
   };
 }
 
-function fetchRepositoriesFailure(error, org) {
+function fetchRepositoriesFailure(error) {
   return {
     type: ActionTypes.FETCH_REPOSITORIES_FAILURE,
-    error, org
+    error
   };
 }
 
-const fetchRepositories = (org) => dispatch => {
-  dispatch(fetchRepositoriesRequest(org));
+const fetchRepositories = () => dispatch => {
+  dispatch(fetchRepositoriesRequest());
   const gh = github();
-  const api = org ? gh.getOrganization(org).getRepos() : gh.getUser().listRepos();
-  return api
-    .then(({ data }) => dispatch(fetchRepositoriesSuccess(data, org)))
+  return gh.getUser().listRepos()
+    .then(({ data }) => dispatch(fetchRepositoriesSuccess(data)))
     .catch(error => {
-      return dispatch(fetchRepositoriesFailure(error, org));
+      return dispatch(fetchRepositoriesFailure(error));
     })
     ;
 };
 
-const shouldFetchRepositories = (state, org) => { // eslint-disable-line complexity
-  const repos = state.repositoriesByOrg[org || '@me'];
-  if (!repos) {
+const shouldFetchRepositories = (state) => { // eslint-disable-line complexity
+  const { repositories } = state;
+  if (!repositories || !repositories.items || !repositories.items.length) {
     return true;
   }
-  if (repos.isFetching) {
+  if (repositories.isFetching) {
     return false;
   }
-  return repos.didInvalidate;
+  return repositories.didInvalidate;
 };
 
-export const fetchRepositoriesIfNeeded = org => (dispatch, getState) => {
-  if (shouldFetchRepositories(getState(), org)) {
-    return dispatch(fetchRepositories(org));
+export const fetchRepositoriesIfNeeded = () => (dispatch, getState) => {
+  if (shouldFetchRepositories(getState())) {
+    return dispatch(fetchRepositories());
   }
 };

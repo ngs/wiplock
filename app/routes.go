@@ -16,8 +16,6 @@ func (app *App) SetupRouter() *mux.Router {
 	router.HandleFunc("/api/{org}/locks", app.HandleListLocks).Methods("GET")
 	router.HandleFunc("/api/{org}/{:repo}/lock", app.HandleLockRepo).Methods("POST")
 	router.HandleFunc("/api/{org}/{:repo}/lock", app.HandleUnlockRepo).Methods("DELETE")
-	router.HandleFunc("/{org}/{repo}", app.HandleIndex).Methods("GET")
-	router.HandleFunc("/{org}", app.HandleIndex).Methods("GET")
 	router.HandleFunc("/", app.HandleIndex).Methods("GET")
 	return router
 }
