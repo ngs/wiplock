@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/sessions"
 	"github.com/lestrrat/go-apache-logformat"
 	"gopkg.in/go-playground/webhooks.v1"
@@ -23,6 +24,8 @@ type App struct {
 	Secret       string
 	ClientSecret string
 	ClientID     string
+	LockStoreKey string
+	RedisConn    redis.Conn
 }
 
 func New() (*App, error) {
@@ -49,11 +52,19 @@ func New() (*App, error) {
 	if secret == "" {
 		return app, errors.New("SECRET is not configured. try run\n$ echo \"export SECRET='$(openssl rand -hex 48)'\" >> .envrc")
 	}
+	if lockStoreKey := os.Getenv("LOCK_KEY"); lockStoreKey != "" {
+		app.LockStoreKey = lockStoreKey
+	} else {
+		app.LockStoreKey = "wiplocks"
+	}
 	app.Secret = secret
 	app.ClientID = clientID
 	app.ClientSecret = clientSecret
 	app.SetupSessionStore()
 	app.SetupWebhooks()
+	if err := app.SetupRedis(); err != nil {
+		return app, err
+	}
 	return app, nil
 }
 

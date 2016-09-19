@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -53,7 +52,7 @@ func (app *App) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 
 func (app *App) HandleAuthenticate(w http.ResponseWriter, r *http.Request) {
 	config := app.GetOAuth2Config()
-	state := RandomString(24) // TODO: persist referer with state as key
+	state := RandomString(24) // no meaning for now
 	url := config.AuthCodeURL(state)
 	http.Redirect(w, r, url, http.StatusSeeOther)
 }
@@ -89,9 +88,19 @@ func (app *App) HandleListRepos(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleLockRepo(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "HandleLockRepo: not yet implemented\n")
+	vars := mux.Vars(r)
+	org := vars["org"]
+	repo := vars["repo"]
+	context := app.CreateContext(r)
+	context.LockRepo(org + "/" + repo)
+	w.WriteHeader(204)
 }
 
 func (app *App) HandleUnlockRepo(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "HandleUnlockRepo: not yet implemented\n")
+	vars := mux.Vars(r)
+	org := vars["org"]
+	repo := vars["repo"]
+	context := app.CreateContext(r)
+	context.UnlockRepo(org + "/" + repo)
+	w.WriteHeader(204)
 }

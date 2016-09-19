@@ -21,13 +21,15 @@ func RepositoryFromGitHub(repo *github.Repository) Repository {
 		Name:    repo.Name,
 		HTMLURL: repo.HTMLURL,
 		Private: repo.Private,
-		Locked:  false, // TODO
+		Locked:  false,
 	}
 }
 
 func (context *Context) GetRepos() ([]Repository, error) {
 	client := github.NewClient(context.GetOAuth2Client())
 	var allRepos []Repository
+	var fullNames []string
+	fullNames = append(fullNames, context.LockStoreKey)
 	opt := &github.RepositoryListOptions{
 		ListOptions: github.ListOptions{PerPage: 100},
 	}
@@ -39,12 +41,24 @@ func (context *Context) GetRepos() ([]Repository, error) {
 		for _, repo := range repos {
 			if (*repo.Permissions)["admin"] == true {
 				allRepos = append(allRepos, RepositoryFromGitHub(repo))
+				fullNames = append(fullNames, *repo.FullName)
 			}
 		}
 		if resp.NextPage == 0 {
 			break
 		}
 		opt.ListOptions.Page = resp.NextPage
+	}
+	hmgetArgs := make([]interface{}, len(fullNames))
+	for i, v := range fullNames {
+		hmgetArgs[i] = v
+	}
+	res, err := context.RedisConn.Do("HMGET", hmgetArgs...)
+	if err != nil {
+		return allRepos, err
+	}
+	for i, v := range res.([]interface{}) {
+		allRepos[i].Locked = v != nil
 	}
 	return allRepos, nil
 }
@@ -55,4 +69,28 @@ func (context *Context) GetReposJson() ([]byte, error) {
 		return []byte{}, err
 	}
 	return json.Marshal(repos)
+}
+
+func (context *Context) LockRepo(fullName string) error {
+	conn := context.RedisConn
+	if _, err := conn.Do("HSET", context.LockStoreKey, fullName, context.GetAccessToken()); err != nil {
+		return err
+	}
+	if err := conn.Flush(); err != nil {
+		return err
+	}
+	// TODO: Create webhook
+	return nil
+}
+
+func (context *Context) UnlockRepo(fullName string) error {
+	conn := context.RedisConn
+	if _, err := conn.Do("HSET", context.LockStoreKey, fullName); err != nil {
+		return err
+	}
+	if err := conn.Flush(); err != nil {
+		return err
+	}
+	// TODO: Delete webhook
+	return nil
 }

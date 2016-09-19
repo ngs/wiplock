@@ -15,6 +15,16 @@
 			"Rev": "7875e9689d335cd15294cd6f4f0ef8322ce4c8e7"
 		},
 		{
+			"ImportPath": "github.com/garyburd/redigo/internal",
+			"Comment": "v1.0.0-5-gffa8d46",
+			"Rev": "ffa8d46ada782d81cfda81a0fbd9f45ceae448e8"
+		},
+		{
+			"ImportPath": "github.com/garyburd/redigo/redis",
+			"Comment": "v1.0.0-5-gffa8d46",
+			"Rev": "ffa8d46ada782d81cfda81a0fbd9f45ceae448e8"
+		},
+		{
 			"ImportPath": "github.com/google/go-github/github",
 			"Rev": "6c0472a7690bdb983189bb16aa31512ae1928e6e"
 		},

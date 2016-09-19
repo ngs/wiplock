@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/sessions"
 	"net/http"
 )
@@ -11,16 +12,20 @@ const SiteTitle = "Wiplock"
 type Context struct {
 	AccessToken     string
 	BodyClassName   string
-	SiteDescription string
-	SiteTitle       string
 	JavaScriptPath  string
+	RedisConn       redis.Conn
 	Request         *http.Request
 	Session         *sessions.Session
+	SiteDescription string
+	SiteTitle       string
+	LockStoreKey    string
 }
 
 func (app *App) CreateContext(r *http.Request) *Context {
 	ctx := &Context{
 		JavaScriptPath:  app.GetJavaScriptPath(),
+		LockStoreKey:    app.LockStoreKey,
+		RedisConn:       app.RedisConn,
 		Request:         r,
 		Session:         app.GetSession(r),
 		SiteDescription: SiteDescription,
