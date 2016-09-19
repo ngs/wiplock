@@ -65,9 +65,13 @@ class Reporitories extends Component {
                 onChange={e => this.setState({ filterText: e.target.value })} />
             </InputGroup>
           </FormGroup>
-          <ListGroup>{filteredRepos.map(item =>
-            <ListItem item={item} key={`repo-${item.id}`} filterText={filterText} />)}
-          </ListGroup>
+          {filteredRepos.length > 0 ? (
+            <ListGroup>{filteredRepos.map(item =>
+              <ListItem item={item} key={`repo-${item.id}`} filterText={filterText} />)}
+            </ListGroup>
+          ) : (
+            <Panel bsStyle='warning'>No repositories matched with <code>{this.state.filterText}</code>.</Panel>
+          )}
         </div>
       );
     }
