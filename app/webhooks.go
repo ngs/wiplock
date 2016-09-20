@@ -27,7 +27,7 @@ func (app *App) HandlePullRequest(payload PullRequestPayload) error {
 	}
 	token := string(tokenBytes)
 	client := github.NewClient(GetOAuth2ClientForToken(token))
-	targetURL := "https://wiplock.com/?q=" + fullName
+	targetURL := "https://wiplock.com/?q=" + name
 	description := "This pull request"
 	context := "wiplock"
 	var state string
