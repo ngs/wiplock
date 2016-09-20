@@ -92,7 +92,10 @@ func (app *App) HandleLockRepo(w http.ResponseWriter, r *http.Request) {
 	org := vars["org"]
 	repo := vars["repo"]
 	context := app.CreateContext(r)
-	context.LockRepo(org + "/" + repo)
+	if err := context.LockRepo(org, repo); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(204)
 }
 
@@ -101,6 +104,9 @@ func (app *App) HandleUnlockRepo(w http.ResponseWriter, r *http.Request) {
 	org := vars["org"]
 	repo := vars["repo"]
 	context := app.CreateContext(r)
-	context.UnlockRepo(org + "/" + repo)
+	if err := context.UnlockRepo(org, repo); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	w.WriteHeader(204)
 }

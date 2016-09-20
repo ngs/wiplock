@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/google/go-github/github"
 )
 
@@ -71,26 +72,67 @@ func (context *Context) GetReposJson() ([]byte, error) {
 	return json.Marshal(repos)
 }
 
-func (context *Context) LockRepo(fullName string) error {
+func (context *Context) LockRepo(org string, repo string) error {
+	fullName := org + "/" + repo
+	hookURL := context.GetHookURL()
+	client := github.NewClient(context.GetOAuth2Client())
+	active := true
+	name := "web"
+	hook, res, err := client.Repositories.CreateHook(org, repo, &github.Hook{
+		Name:   &name,
+		Events: []string{"pull_request"},
+		Active: &active,
+		// https://developer.github.com/v3/repos/hooks/
+		Config: map[string]interface{}{
+			"url":  hookURL,
+			"type": "json",
+		},
+	})
+	fmt.Printf("hook: %+v\nres: %+v\n err: %+v\n", hook, res, err)
+	if err != nil {
+		return err
+	}
 	conn := context.RedisConn
-	if _, err := conn.Do("HSET", context.LockStoreKey, fullName, context.GetAccessToken()); err != nil {
+	token := context.GetAccessToken()
+	if _, err := conn.Do("HSET", context.LockStoreKey, fullName, token); err != nil {
 		return err
 	}
 	if err := conn.Flush(); err != nil {
 		return err
 	}
-	// TODO: Create webhook
 	return nil
 }
 
-func (context *Context) UnlockRepo(fullName string) error {
+func (context *Context) UnlockRepo(org string, repo string) error {
+	fullName := org + "/" + repo
+	hookURL := context.GetHookURL()
+	client := github.NewClient(context.GetOAuth2Client())
+	opt := &github.ListOptions{PerPage: 100}
+	for {
+		hooks, resp, err := client.Repositories.ListHooks(org, repo, opt)
+		if err != nil {
+			return err
+		}
+		for _, hook := range hooks {
+			if hook.Config["url"] == hookURL {
+				if _, err = client.Repositories.DeleteHook(org, repo, *hook.ID); err != nil {
+					return err
+				}
+			}
+		}
+		if resp.NextPage == 0 {
+			break
+		}
+		opt.Page = resp.NextPage
+	}
+
+	fmt.Printf("%v %v", hookURL, client)
 	conn := context.RedisConn
-	if _, err := conn.Do("HSET", context.LockStoreKey, fullName); err != nil {
+	if _, err := conn.Do("HDEL", context.LockStoreKey, fullName); err != nil {
 		return err
 	}
 	if err := conn.Flush(); err != nil {
 		return err
 	}
-	// TODO: Delete webhook
 	return nil
 }

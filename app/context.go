@@ -45,6 +45,10 @@ func (context *Context) GetAccessToken() string {
 	return ""
 }
 
+func (context *Context) GetHookURL() string {
+	return "https://" + context.Request.Host + "/hooks"
+}
+
 func (context *Context) SetAccessToken(token string, w http.ResponseWriter) error {
 	context.Session.Values["token"] = token
 	return context.Session.Save(context.Request, w)
