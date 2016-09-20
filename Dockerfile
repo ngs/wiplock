@@ -5,4 +5,4 @@ ADD . /go/src/github.com/ngs/wiplock
 RUN go install github.com/ngs/wiplock
 
 ENTRYPOINT ["/go/bin/wiplock"]
-
+EXPOSE 8000
