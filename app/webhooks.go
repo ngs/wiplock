@@ -22,7 +22,6 @@ func (app *App) HandlePullRequest(payload PullRequestPayload) error {
 	}
 	tokenBytes, ok := res.([]byte)
 	if !ok {
-		fmt.Printf("%v", res)
 		return fmt.Errorf("Token not found for %v", fullName)
 	}
 	token := string(tokenBytes)
@@ -32,7 +31,7 @@ func (app *App) HandlePullRequest(payload PullRequestPayload) error {
 	context := "wiplock"
 	var state string
 	if regexp.MustCompile("(?i)wip").MatchString(title) ||
-		regexp.MustCompile("\n\\- [ ]").MatchString(body) {
+		regexp.MustCompile("[\\n]\\-\\s+\\[\\s+\\]([^\\n]+)\n").MatchString(body) {
 		state = "pending"
 	} else {
 		state = "success"
