@@ -57,6 +57,10 @@ func (app *App) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "400 Bad Request - Missing X-GitHub-Event Header", http.StatusBadRequest)
 		return
 	}
+	if event == "ping" {
+		w.Write([]byte("OK"))
+		return
+	}
 	if event != "pull_request" {
 		http.Error(w, "400 Bad Request - Invalid X-GitHub-Event Header: "+event, http.StatusBadRequest)
 		return
