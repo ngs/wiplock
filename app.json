@@ -8,7 +8,24 @@
     "github",
     "pull requests"
   ],
-  "image": "heroku/go:1.6",
+  "env": {
+    "GITHUB_CLIENT_ID": {
+      "description": "GitHub's client ID. Grab yours from https://github.com/settings/applications/new"
+    },
+    "GITHUB_CLIENT_SECRET": {
+      "description": "GitHub's client secret."
+    },
+    "SECRET": {
+      "description": "Secret key for verifying GitHub Signed Webhook and secure sessions",
+      "generator": "secret"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-redis:hobby-dev"
+    }
+  ],
+  "image": "heroku/go:1.7",
   "mount_dir": "src/github.com/ngs/wiplock",
   "website": "http://github.com/ngs/wiplock",
   "repository": "http://github.com/ngs/wiplock"
