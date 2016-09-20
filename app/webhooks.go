@@ -7,6 +7,7 @@ import (
 )
 
 func (app *App) HandlePullRequest(payload PullRequestPayload) error {
+	app.ReconnectRedisIfNeeeded()
 	pr := payload.PullRequest
 	repo := payload.Repository
 	title := pr.Title

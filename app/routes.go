@@ -122,6 +122,7 @@ func (app *App) HandleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleListRepos(w http.ResponseWriter, r *http.Request) {
+	app.ReconnectRedisIfNeeeded()
 	context := app.CreateContext(r)
 	data, err := context.GetReposJson()
 	if err != nil {
@@ -133,6 +134,7 @@ func (app *App) HandleListRepos(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleLockRepo(w http.ResponseWriter, r *http.Request) {
+	app.ReconnectRedisIfNeeeded()
 	vars := mux.Vars(r)
 	org := vars["org"]
 	repo := vars["repo"]
@@ -145,6 +147,7 @@ func (app *App) HandleLockRepo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleUnlockRepo(w http.ResponseWriter, r *http.Request) {
+	app.ReconnectRedisIfNeeeded()
 	vars := mux.Vars(r)
 	org := vars["org"]
 	repo := vars["repo"]
