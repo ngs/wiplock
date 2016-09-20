@@ -27,14 +27,24 @@ func (app *App) HandlePullRequest(payload PullRequestPayload) error {
 	token := string(tokenBytes)
 	client := github.NewClient(GetOAuth2ClientForToken(token))
 	targetURL := "https://wiplock.herokuapp.com/?repo=" + fullName
-	description := "Webhooks for preventing to merge pulls in progress"
+	description := "This pull request"
 	context := "wiplock"
 	var state string
-	if regexp.MustCompile("(?i)wip").MatchString(title) ||
-		regexp.MustCompile("[\\n]\\-\\s+\\[\\s+\\]([^\\n]+)\n").MatchString(body) {
+	containsWIP := regexp.MustCompile("(?i)wip").MatchString(title)
+	containsUnchecked := regexp.MustCompile("[\\n]\\-\\s+\\[\\s+\\]([^\\n]+)\n").MatchString(body)
+	if containsWIP || containsUnchecked {
 		state = "pending"
 	} else {
 		state = "success"
+	}
+	if containsWIP {
+		description = description + " contains WIP in the title"
+	}
+	if containsUnchecked {
+		if containsWIP {
+			description = description + " and"
+		}
+		description = description + " has unchecked checkboxes"
 	}
 	status := &github.RepoStatus{
 		TargetURL:   &targetURL,
