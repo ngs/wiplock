@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/google/go-github/github"
 )
 
@@ -78,7 +77,7 @@ func (context *Context) LockRepo(org string, repo string) error {
 	client := github.NewClient(context.GetOAuth2Client())
 	active := true
 	name := "web"
-	hook, res, err := client.Repositories.CreateHook(org, repo, &github.Hook{
+	_, _, err := client.Repositories.CreateHook(org, repo, &github.Hook{
 		Name:   &name,
 		Events: []string{"pull_request"},
 		Active: &active,
@@ -88,7 +87,6 @@ func (context *Context) LockRepo(org string, repo string) error {
 			"type": "json",
 		},
 	})
-	fmt.Printf("hook: %+v\nres: %+v\n err: %+v\n", hook, res, err)
 	if err != nil {
 		return err
 	}
@@ -126,7 +124,6 @@ func (context *Context) UnlockRepo(org string, repo string) error {
 		opt.Page = resp.NextPage
 	}
 
-	fmt.Printf("%v %v", hookURL, client)
 	conn := context.RedisConn
 	if _, err := conn.Do("HDEL", context.LockStoreKey, fullName); err != nil {
 		return err
