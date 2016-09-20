@@ -8,15 +8,27 @@ import (
 )
 
 func (app *App) SetupRedis() error {
+
+	connectTimeout := 1 * time.Second
+	readTimeout := 1 * time.Second
+	writeTimeout := 1 * time.Second
+
 	if url := os.Getenv("REDIS_URL"); url != "" {
-		conn, err := redis.DialURL(url)
+		conn, err := redis.DialURL(url,
+			redis.DialConnectTimeout(connectTimeout),
+			redis.DialReadTimeout(readTimeout),
+			redis.DialWriteTimeout(writeTimeout))
 		if err != nil {
 			return err
 		}
 		app.RedisConn = conn
 		return nil
 	} else {
-		conn, err := redis.DialTimeout("tcp", ":6379", 0, 1*time.Second, 1*time.Second)
+		conn, err := redis.Dial("tcp", ":6379",
+			redis.DialConnectTimeout(connectTimeout),
+			redis.DialReadTimeout(readTimeout),
+			redis.DialWriteTimeout(writeTimeout))
+
 		if err != nil {
 			return err
 		}
