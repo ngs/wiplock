@@ -31,7 +31,7 @@ func (app *App) HandlePullRequest(payload PullRequestPayload) error {
 	context := "wiplock"
 	var state string
 	containsWIP := regexp.MustCompile("(?i)wip").MatchString(title)
-	containsUnchecked := regexp.MustCompile("[\\n]\\-\\s+\\[\\s+\\]([^\\n]+)\n").MatchString(body)
+	containsUnchecked := regexp.MustCompile("\\n\\-\\s+\\[\\s+\\]([^\\n]+)").MatchString(body)
 	if containsWIP || containsUnchecked {
 		state = "pending"
 	} else {
