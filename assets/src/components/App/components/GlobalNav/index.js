@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Button, Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 import './index.styl';
 
@@ -10,9 +9,7 @@ export default class GlobalNav extends Component {
       <Navbar id='global-nav'>
         <Navbar.Header>
           <Navbar.Brand>
-            <LinkContainer to={{ pathname: '/' }} className='navbar-brand'>
-              <Button bsStyle='link'>Wiplock</Button>
-            </LinkContainer>
+            Wiplock
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
