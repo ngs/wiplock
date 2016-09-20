@@ -1,0 +1,13 @@
+machine:
+  timezone: UTC
+  node:
+    version: 6.1.0
+general:
+  artifacts:
+    - wiplock
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: wiplock
+

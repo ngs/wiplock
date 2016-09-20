@@ -4,6 +4,12 @@ Wiplock
 [![CircleCI](https://circleci.com/gh/ngs/wiplock.svg?style=svg&circle-token=5420dff80ec6221981e5055999bf59705a25b696)](https://circleci.com/gh/ngs/wiplock)
 [![](https://img.shields.io/docker/automated/atsnngs/wiplock.svg)](https://hub.docker.com/r/atsnngs/wiplock/)
 
+Wiplock is a tiny webhook application that prevents mistakenly merging in progress pull requests
+
+https://wiplock.com
+
+![](https://raw.githubusercontent.com/ngs/sources.ngs.io/master/source/images/2016-09-23-wiplock/screen.gif)
+
 Running
 -------
 
@@ -49,7 +55,7 @@ docker run --name wiplock -p 8000:8000 -d --rm \
   -e SECRET=${SECRET} \
   -e REDIS_URL="redis://redis:6379" \
   atsnngs/wiplock
-  
+
 open http://localhost:8000
 ```
 
