@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-fa';
 import escapeStringRegexp from 'escape-string-regexp';
 import { fetchRepositoriesIfNeeded } from '../../actions/repositories';
+import createHistory from 'history/createBrowserHistory';
 import ListItem from './components/ListItem';
 import Spinner from '../Spinner';
 import './index.styl';
@@ -13,17 +14,33 @@ class Reporitories extends Component {
 
   constructor(...args) {
     super(...args);
+    this.history = createHistory();
     this.state = { filterText: '', selectedOrg: null };
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { history } = this;
+    this.unlistenHistory = history.listen(this.historyDidChange.bind(this));
     dispatch(fetchRepositoriesIfNeeded());
+    this.historyDidChange(history.location);
+  }
+
+  componentWillUnmount() {
+    if (typeof this.unlistenHistory === 'function') {
+      this.unlistenHistory();
+      this.unlistenHistory = null;
+    }
+  }
+
+  historyDidChange(location) {
+    const filterText = ((location.search).match(/q=([^&]+)/) || [])[1];
+    this.setState({ filterText });
   }
 
   renderFilterForm() {
     const { repos } = this.props;
-    const { selectedOrg } = this.state;
+    const { selectedOrg, filterText } = this.state;
     const orgNames = repos.map(repo => repo.owner.login);
     const orgs = repos
       .map(repo => repo.owner)
@@ -35,8 +52,8 @@ class Reporitories extends Component {
           <InputGroup.Addon>
             <Icon name='search' />
           </InputGroup.Addon>
-          <FormControl type='text' placeholder='Filter Repositories'
-            onChange={e => this.setState({ filterText: e.target.value })} />
+          <FormControl type='text' placeholder='Filter Repositories' defaultValue={filterText}
+            onChange={e => this.history.push({ search: `?q=${e.target.value}` })} />
           <DropdownButton
             bsSize='large'
             pullRight
