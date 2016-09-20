@@ -3,35 +3,29 @@ package app
 import (
 	"fmt"
 	"github.com/google/go-github/github"
-	githubWebhook "gopkg.in/go-playground/webhooks.v1/github"
 	"regexp"
 )
 
-func (app *App) SetupWebhooks() {
-	wh := githubWebhook.New(&githubWebhook.Config{Secret: app.Secret})
-	wh.RegisterEvents(app.HandlePullRequest, githubWebhook.PullRequestEvent)
-	app.Webhook = wh
-}
-
-func (app *App) HandlePullRequest(payload interface{}) {
-	pl := payload.(githubWebhook.PullRequestPayload)
-	title := pl.PullRequest.Title
-	body := pl.PullRequest.Body
-	sha := pl.PullRequest.Head.SHA
-	org := pl.Repository.Owner.Login
-	name := pl.Repository.Name
-	fullName := pl.Repository.FullName
-	fmt.Println(title, body, fullName, sha)
+func (app *App) HandlePullRequest(payload PullRequestPayload) error {
+	pr := payload.PullRequest
+	repo := payload.Repository
+	title := pr.Title
+	body := pr.Body
+	sha := pr.Head.SHA
+	org := *repo.Owner.Login
+	name := *repo.Name
+	fullName := repo.FullName
 	res, err := app.RedisConn.Do("HGET", app.LockStoreKey, fullName)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
-	token, ok := res.(string)
+	tokenBytes, ok := res.([]byte)
 	if !ok {
-		fmt.Println("Token not found for " + fullName)
-		return
+		fmt.Printf("%v", res)
+		return fmt.Errorf("Token not found for %v", fullName)
 	}
+	token := string(tokenBytes)
 	client := github.NewClient(GetOAuth2ClientForToken(token))
 	targetURL := "https://wiplock.herokuapp.com/?repo=" + fullName
 	description := "Webhooks for preventing to merge pulls in progress"
@@ -51,5 +45,7 @@ func (app *App) HandlePullRequest(payload interface{}) {
 	}
 	if _, _, err := client.Repositories.CreateStatus(org, name, sha, status); err != nil {
 		fmt.Println(err)
+		return err
 	}
+	return nil
 }

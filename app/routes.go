@@ -1,7 +1,10 @@
 package app
 
 import (
-	"fmt"
+	"crypto/hmac"
+	"crypto/sha1"
+	"encoding/hex"
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
@@ -49,10 +52,43 @@ func (app *App) HandleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleWebhook(w http.ResponseWriter, r *http.Request) {
+	event := r.Header.Get("X-GitHub-Event")
+	if event == "" {
+		http.Error(w, "400 Bad Request - Missing X-GitHub-Event Header", http.StatusBadRequest)
+		return
+	}
+	if event != "pull_request" {
+		http.Error(w, "400 Bad Request - Invalid X-GitHub-Event Header: "+event, http.StatusBadRequest)
+		return
+	}
 	payload, err := ioutil.ReadAll(r.Body)
-	fmt.Println("%v %v", string(payload), err)
+	if err != nil || len(payload) == 0 {
+		http.Error(w, "Error reading Body", http.StatusInternalServerError)
+		return
+	}
 
-	app.Webhook.ParsePayload(w, r)
+	signature := r.Header.Get("X-Hub-Signature")
+
+	if len(signature) == 0 {
+		http.Error(w, "403 Forbidden - Missing X-Hub-Signature required for HMAC verification", http.StatusForbidden)
+		return
+	}
+
+	mac := hmac.New(sha1.New, []byte(app.Secret))
+	mac.Write(payload)
+
+	expectedMAC := hex.EncodeToString(mac.Sum(nil))
+
+	if !hmac.Equal([]byte(signature[5:]), []byte(expectedMAC)) {
+		http.Error(w, "403 Forbidden - HMAC verification failed", http.StatusForbidden)
+		return
+	}
+
+	var p PullRequestPayload
+	json.Unmarshal([]byte(payload), &p)
+	if err := app.HandlePullRequest(p); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func (app *App) HandleAuthenticate(w http.ResponseWriter, r *http.Request) {

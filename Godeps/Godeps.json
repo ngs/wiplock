@@ -80,10 +80,6 @@
 		{
 			"ImportPath": "gopkg.in/go-playground/webhooks.v1",
 			"Rev": "6bfbae2ae33d4c4cc08178f2d5fd77c465e16596"
-		},
-		{
-			"ImportPath": "gopkg.in/go-playground/webhooks.v1/github",
-			"Rev": "6bfbae2ae33d4c4cc08178f2d5fd77c465e16596"
 		}
 	]
 }

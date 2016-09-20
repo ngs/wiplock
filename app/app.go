@@ -6,7 +6,6 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/sessions"
 	"github.com/lestrrat/go-apache-logformat"
-	"gopkg.in/go-playground/webhooks.v1"
 	"html/template"
 	"log"
 	"net/http"
@@ -20,7 +19,6 @@ type App struct {
 	Port         int
 	SessionStore *sessions.CookieStore
 	AssetHash    string
-	Webhook      webhooks.Webhook
 	Secret       string
 	ClientSecret string
 	ClientID     string
@@ -61,7 +59,6 @@ func New() (*App, error) {
 	app.ClientID = clientID
 	app.ClientSecret = clientSecret
 	app.SetupSessionStore()
-	app.SetupWebhooks()
 	if err := app.SetupRedis(); err != nil {
 		return app, err
 	}

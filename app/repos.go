@@ -6,22 +6,24 @@ import (
 )
 
 type Repository struct {
-	ID      *int         `json:"id,omitempty"`
-	Owner   *github.User `json:"owner,omitempty"`
-	Name    *string      `json:"name,omitempty"`
-	HTMLURL *string      `json:"html_url,omitempty"`
-	Private *bool        `json:"private"`
-	Locked  bool         `json:"locked"`
+	ID       *int         `json:"id,omitempty"`
+	Owner    *github.User `json:"owner,omitempty"`
+	Name     *string      `json:"name,omitempty"`
+	HTMLURL  *string      `json:"html_url,omitempty"`
+	Private  *bool        `json:"private"`
+	Locked   bool         `json:"locked"`
+	FullName string       `json:"full_name"`
 }
 
 func RepositoryFromGitHub(repo *github.Repository) Repository {
 	return Repository{
-		ID:      repo.ID,
-		Owner:   repo.Owner,
-		Name:    repo.Name,
-		HTMLURL: repo.HTMLURL,
-		Private: repo.Private,
-		Locked:  false,
+		FullName: *repo.FullName,
+		HTMLURL:  repo.HTMLURL,
+		ID:       repo.ID,
+		Locked:   false,
+		Name:     repo.Name,
+		Owner:    repo.Owner,
+		Private:  repo.Private,
 	}
 }
 
