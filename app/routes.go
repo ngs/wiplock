@@ -1,7 +1,9 @@
 package app
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -47,6 +49,9 @@ func (app *App) HandleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) HandleWebhook(w http.ResponseWriter, r *http.Request) {
+	payload, err := ioutil.ReadAll(r.Body)
+	fmt.Println("%v %v", string(payload), err)
+
 	app.Webhook.ParsePayload(w, r)
 }
 

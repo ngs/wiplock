@@ -83,8 +83,9 @@ func (context *Context) LockRepo(org string, repo string) error {
 		Active: &active,
 		// https://developer.github.com/v3/repos/hooks/
 		Config: map[string]interface{}{
-			"url":  hookURL,
-			"type": "json",
+			"url":          hookURL,
+			"content_type": "json",
+			"secret":       context.Secret,
 		},
 	})
 	if err != nil {

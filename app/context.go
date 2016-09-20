@@ -13,12 +13,13 @@ type Context struct {
 	AccessToken     string
 	BodyClassName   string
 	JavaScriptPath  string
+	LockStoreKey    string
 	RedisConn       redis.Conn
 	Request         *http.Request
+	Secret          string
 	Session         *sessions.Session
 	SiteDescription string
 	SiteTitle       string
-	LockStoreKey    string
 }
 
 func (app *App) CreateContext(r *http.Request) *Context {
@@ -27,6 +28,7 @@ func (app *App) CreateContext(r *http.Request) *Context {
 		LockStoreKey:    app.LockStoreKey,
 		RedisConn:       app.RedisConn,
 		Request:         r,
+		Secret:          app.Secret,
 		Session:         app.GetSession(r),
 		SiteDescription: SiteDescription,
 		SiteTitle:       SiteTitle,

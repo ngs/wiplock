@@ -33,6 +33,10 @@ func (context *Context) GetOAuth2Client() *http.Client {
 	if token == "" {
 		return nil
 	}
+	return GetOAuth2ClientForToken(token)
+}
+
+func GetOAuth2ClientForToken(token string) *http.Client {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
