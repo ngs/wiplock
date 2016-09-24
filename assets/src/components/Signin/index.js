@@ -17,7 +17,7 @@ export default class Siginin extends Component {
             </Button>
           </p>
           <p className='whats-this'>
-            <a href='https://ngs.io/2016/09/23/wiplock/' target='_blank'>What&apos; this?</a>
+            <a href='https://ngs.io/2016/09/23/wiplock/' target='_blank'>What&apos;s this?</a>
           </p>
         </div>
       </div>
