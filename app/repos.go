@@ -79,7 +79,7 @@ func (context *Context) LockRepo(org string, repo string) error {
 	client := github.NewClient(context.GetOAuth2Client())
 	active := true
 	name := "web"
-	_, _, err := client.Repositories.CreateHook(org, repo, &github.Hook{
+	_, res, err := client.Repositories.CreateHook(org, repo, &github.Hook{
 		Name:   &name,
 		Events: []string{"pull_request"},
 		Active: &active,
@@ -90,7 +90,7 @@ func (context *Context) LockRepo(org string, repo string) error {
 			"secret":       context.Secret,
 		},
 	})
-	if err != nil {
+	if err != nil && res.StatusCode != 422 {
 		return err
 	}
 	conn := context.RedisConn
